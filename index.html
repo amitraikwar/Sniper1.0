@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>appNeura</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- JQVMap -->
+  <link rel="stylesheet" href="plugins/jqvmap/jqvmap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
+  <!-- summernote -->
+  <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
+
+
+<style type="text/css">
+
+
+  .node {
+      cursor: pointer;
+    }
+
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      border-bottom: 1px dotted black;
+      /* If you want dots under the hoverable text */
+    }
+
+    path.link {
+      fill: #4775d1;
+      stroke: #33;
+      stroke-width: 1px;
+    }
+
+    /* Tooltip text */
+
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 120px;
+      background-color: black;
+      color: #fff;
+      text-align: center;
+      padding: 5px 0;
+      border-radius: 6px;
+
+      /* Position the tooltip text - see examples below! */
+      position: absolute;
+      z-index: 1;
+    }
+
+    /* Show the tooltip text when you mouse over the tooltip container */
+
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+    }
+
+    .node circle {
+      fill: #fff;
+      stroke: steelblue;
+      stroke-width: 3px;
+    }
+
+    .node text {
+      font: 12px sans-serif;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .node--internal text {
+      text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+    }
+
+    .link {
+      fill: none;
+      stroke: #ccc;
+      stroke-width: 1px;
+    }
+  
+
+.layout-navbar-fixed .wrapper .content-wrapper {
+    margin-top: calc(0rem + 0px);
+}
+
+
+.content-header {
+    padding: 10px .5rem;
+}
+
+.span-item{
+  margin-left: 2%;
+  color: #1616c1;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+[class*=sidebar-dark-] {
+    background-color: #0b51a1;
+}
+
+.navbar-light {
+    background-color: #0b51a1;
+}
+
+
+.navbar-light .navbar-nav .nav-link {
+    color: rgb(255 255 255);
+}
+
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: rgb(255 255 255);
+}
+
+
+
+
+.layout-navbar-fixed .wrapper .sidebar-dark-primary .brand-link:not([class*=navbar]) {
+    background-color: #0b51a1!important;
+}
+
+.small-logo{
+  position: absolute;
+    font-size: 12px;
+    margin-top: 18px;
+    float: left;
+    margin-left: -34px;
+}
+
+
+/*.td-style{
+  padding: 5px;
+}*/
+
+td{
+  padding-top: 5px!important;
+  padding-bottom: 5px!important;
+}
+
+
+
+</style>
+
+
+</head>
+<body onresize="myFunction()" class="sidebar-mini layout-fixed layout-navbar-fixed">
+<div class="wrapper">
+
+  <!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+  </div>
+
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link">Home</a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link">Setting</a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link">Contact</a>
+      </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <!-- Navbar Search -->
+      <li class="nav-item">
+      
+        <div class="navbar-search-block">
+          <form class="form-inline">
+            <div class="input-group input-group-sm" style="padding-top:2%">
+              <input class="form-control form-control-navbar" type="search" placeholder="What are you looking for" aria-label="Search">
+              <div class="input-group-append">
+                <button class="btn btn-navbar" type="submit">
+                  <i class="fas fa-search"></i>
+                </button>
+                
+              </div>
+            </div>
+          </form>
+        </div>
+      </li>
+
+      <!-- Messages Dropdown Menu -->
+      
+      <!-- Notifications Dropdown Menu -->
+
+      <li class="nav-item">
+        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+          <i class="fas fa-expand-arrows-alt"></i>
+        </a>
+      </li>
+      
+
+      <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" data-widget="user-ic" href="#" role="button">
+          <i class="fas fa-user"></i>
+        </a>
+
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="fas fa-at mr-2"></i> shrinivas.kulkarni@avekshaa.com
+            <!-- <span class="float-right text-muted text-sm">3 mins</span> -->
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#" class="dropdown-item">
+            <i class="fas fa-sign-out-alt mr-2"></i> Logout
+            <!-- <span class="float-right text-muted text-sm">12 hours</span> -->
+          </a>
+        </div>
+      </li>
+    </ul>
+  </nav>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="index.html" class="brand-link">
+      <img src="docs/assets/img/appneuraLogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity:0.8 ">
+      <span class="brand-text font-weight-light">appNeura</span> 
+      <span class="brand-text font-weight-light small-logo">snyper 0.1</span>
+
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <li class="nav-item menu-open">
+            <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="./index.html" class="nav-link active">
+                <i class="far fa-life-ring nav-icon"></i>
+                <p>Overview</p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+                <a href="./index.html" class="nav-link">
+                  <!-- <i class="far fa-circle nav-icon"></i> -->
+                  <i class="fas fa-exclamation-circle nav-icon"></i>
+                  <p>Incidents</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./index.html" class="nav-link">
+                  <i class="fas fa-cubes nav-icon"></i>
+                  <p>Pattern Analysis</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./index  .html" class="nav-link">
+                  <i class="fas fa-ticket-alt nav-icon"></i>
+                  <p>Ticketing Tools</p>
+                </a>
+              </li>
+
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+
+          <div class="col-sm-6">
+            <h1 class="m-0"> <i class="fa fa-tv" style="font-size: 25px;"></i> Overview</h1>
+          </div><!-- /.col -->
+
+          <div class="col-sm-3">
+            <!-- No code -->
+          </div><!-- /.col -->
+          
+
+          <div class="col-sm-3">
+            <select class="selectpicker" style="width: 99%;margin-top: 4%;height: 75%;">
+              <option>Last 1 hour</option>
+              <option>Last 24 hours</option>
+              <option>Last 7 day</option>
+              <option>Last 30 days</option>
+            </select>
+            <!-- no code -->
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+
+        <!-- Info boxes -->
+        <div class="row">
+          <div class="col-6 col-sm-6 col-md-3">
+            <div class="info-box">
+              <span class="info-box-icon bg-info elevation-1"><i class="far fa-bell"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Raw Alerts</span>
+                <span class="info-box-number">
+                  17340
+                  
+                </span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-6 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-indent"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Incidents</span>
+                <span class="info-box-number">1821</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+
+          <!-- fix for small devices only -->
+          <div class="clearfix hidden-md-up"></div>
+
+
+          <div class="col-6 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-ticket-alt"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Open Tickets</span>
+                <span class="info-box-number">36</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+
+
+
+
+
+          <div class="col-6 col-sm-6 col-md-3">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-success elevation-1"><i class="far fa-window-close"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Closed Tickets</span>
+                <span class="info-box-number">92</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+
+          
+
+
+
+        </div>
+        <!-- /.row -->
+
+
+        <!-- Main row -->
+        <div class="row">
+
+          <!-- Adding new sections -->
+          <section class="col-lg-7">
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fas fa-chart-bar mr-1"></i>
+                  Alerts Timeline By Tool
+                </h3>
+                
+              </div><!-- /.card-header -->
+
+              <div class="card-body">
+                <div class="tab-content p-0">
+                  <!-- Morris chart - Sales -->
+                  <div class="chart tab-pane active" id="container-alert-timeline" style="position: relative; height: 200px;">
+                      <!-- <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas> -->
+                   </div>
+                </div>
+              </div><!-- /.card-body -->
+
+          </section>
+
+
+
+          <section class="col-lg-5">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fas fa-chart-pie mr-1"></i>
+                  Alert Clustering
+                </h3>
+                <div class="card-tools">
+                </div>
+              </div><!-- /.card-header -->
+
+              <div class="card-body">
+                <div class="tab-content p-0">
+                  <!-- Morris chart - Sales -->
+                  <div class="chart tab-pane active" id="container-alert-clustering" style="position: relative; height: 200px;">
+                      <!-- <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas> -->
+                   </div>
+                </div>
+              </div><!-- /.card-body -->
+            
+
+          </section>
+
+         <!--  second section -->
+          <section class="col-lg-7">
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fa fa-server" title="Server Icon"></i>
+                  Host Map
+                </h3>
+                
+              </div><!-- /.card-header -->
+
+              <div class="card-body">
+                <div class="tab-content p-0">
+                  <!-- Morris chart - Sales -->
+                  <div class="chart tab-pane active" id="host-map" style="position: relative; height: 400px;">
+                      <!-- <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas> -->
+                      <ul class="products-list product-list-in-card pl-2 pr-2">
+                        <li class="item">
+                            <span class="span-item">payment</span>
+                            <div class="host-container" id="hc-1">
+                            </div>
+                        </li>
+                        <li class="item">
+                            <span class="span-item">login</span>
+                            <div class="host-container" id="hc-2">
+                            </div>
+                        </li>
+                      </ul>
+                   </div>
+                </div>
+              </div><!-- /.card-body -->
+
+          </section>
+
+
+          <section class="col-lg-5">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fas fa-project-diagram"></i>
+                    Network Topology
+                </h3>
+                <div class="card-tools">
+                </div>
+              </div><!-- /.card-header -->
+
+              <div class="card-body">
+                <div class="tab-content p-0">
+                  <!-- Morris chart - Sales -->
+                  <div class="chart tab-pane active" id="net-topo" style="position: relative; height: 400px;">
+                      <!-- <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas> -->
+                   </div>
+                </div>
+              </div><!-- /.card-body -->
+          </section>
+
+
+
+
+          <section class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">
+                  <i class="fas fa-project-diagram"></i>
+                    Topology
+                </h3>
+                <div class="card-tools">
+                </div>
+              </div><!-- /.card-header -->
+
+              <div class="card-body">
+                <div class="tab-content p-0">
+                  <!-- Morris chart - Sales -->
+                  <div class="chart tab-pane active" id="topo-chart1" style="position: relative;width: 100%; height: 100%;">
+                      <!-- <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas> -->
+                  </div>
+                </div>
+              </div><!-- /.card-body -->
+            </div>
+          </section>
+
+
+
+
+
+          <!-- section that include the table in this class-...  connectedSortable ... adds the property tat can move div elements  -->
+          <section class="col-lg-12">
+
+          <!-- TABLE: LATEST ORDERS -->
+            <div class="card">
+              <div class="card-header border-transparent">
+                <h3 class="card-title"><i class="fas fa-table"></i> RCA Details</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="table m-0">
+                    <thead>
+                    <tr>
+                      <th>Rca</th>
+                      <th>Description</th>
+                      <th>Priority</th>
+                      <th>Impact</th>
+                      <th>Recommendation</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr>
+                      <td>memory</td>
+                      <td> memory usages is high.</td>
+                      <td><span class="badge badge-warning">medium</span></td>
+                      <td>75.64</td>
+                      <td><button type="button" class="btn btn-primary">view</button></td>
+                    </tr>
+                    <tr>
+                      <td>network</td>
+                      <td>login has a high p90 latency on aveksrv02</td>
+                      <td><span class="badge badge-success">low</span></td>
+                      <td>38.61</td>
+                      <td><button type="button" class="btn btn-primary">view</button></td>
+                    </tr>
+
+
+                    <tr>
+                      <td>cpu</td>
+                      <td>cpu usages crossed 90%.</td>
+                      <td><span class="badge badge-success">low</span></td>
+                      <td>42.63</td>
+                      <td><button type="button" class="btn btn-primary">view</button></td>
+                    </tr>
+
+                    <tr>
+                      <td>webresponse</td>
+                      <td>web throughput is high.</td>
+                      <td><span class="badge badge-danger">High</span></td>
+                      <td>100.0</td>
+                      <td><button type="button" class="btn btn-primary">view</button></td>
+                    </tr>
+                   
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /.table-responsive -->
+              </div>
+              <!-- /.card-body -->
+              <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+          <!-- /.col -->
+          </section>
+
+
+          <!-- modal code starts here -->
+
+          <!-- model for rca topology starts here Kundan -->
+
+
+
+<!--pop up  Modal -->
+<div id="popupModal-rca" class="modal fade" role="dialog">
+<div class="modal-dialog modal-dialog-scrollable">
+<div class="modal-content">
+
+<!-- modal headder starts here -->
+<div id="popupHeader-rca" class="modal-header"
+style="background: #5d84d9; padding: 5px; padding-left: 10px;">
+<!-- populated from the script -->
+</div>
+
+
+<!-- modal body starts here -->
+<div id="popupBody-rca" class="modal-body" style="padding-top:0px;">
+
+<!-- first row for the alert count,severity and entropy -->
+<div class="row" style="padding: 3px; margin-top: 0px;">
+<!-- cards for alert information -->
+
+<!-- end of the  card body row -->
+<!-- end o fthe col class sm - 4 or for card 1 -->
+
+<!-- for card 1 -->
+<!-- <div class="col-sm-4 hovernow"
+style="border: 0.5px solid #dbd1d1; width: 25%; margin-left: 15px; height: 100px;">
+<div class="row">
+<div class="col-sm-12"
+style="height: 35px; background: #485e8e;">
+<p
+style="text-align: center; padding-top: 6%; font-size: 14px; font-weight: 900; color: white;">
+Description</p>
+</div>
+</div>
+
+<div class="row">
+<div class="col-sm-12" id="severity_div-rca" style="height: 58px;">
+<p
+style="font-size: 40px; padding-left: 10px; color: #4a5457;">
+<span id="Severity_val-rca"> 0 </span>
+</p>
+</div>
+</div>
+</div> -->
+
+<!-- for card 1 end -->
+<div class="col-sm-4 hovernow"
+style="border: 0.5px solid #dbd1d1; width: 50%; margin-left: 15px; height: 100px;">
+<div class="row">
+<div class="col-sm-12"
+style="height: 35px; background: #485e8e;">
+<p
+style="text-align: center; padding-top: 2%; font-size: 16px; font-weight: 900; color: white;">
+Parent</p>
+</div>
+</div>
+
+<div class="row">
+<div class="col-sm-12" id="severity_div-rca-2" style="height: 58px;">
+<p
+style="font-size: 40px; padding-left: 10px; color: #4a5457;">
+<span id="Severity_val-rca-2"> 0 </span>
+</p>
+</div>
+</div>
+</div>
+
+<!-- for card 3 -->
+<!-- <div class="col-sm-4 hovernow"
+style="border: 0.5px solid #dbd1d1; width: 30%; margin-left: 15px; height: 100px;">
+<div class="row ">
+<div class="col-sm-12"
+style="height: 35px; background: #485e8e;">
+<p
+style="text-align: center; padding-top: 2%; font-size: 16px; font-weight: 900; color: white;">
+Value</p>
+</div>
+</div>
+end of row
+<div class="row">
+<div class="col-sm-12">
+divide by 3 and 9, 3 for icon and 9 for infor
+<div class="row" style="height: 65px;">
+<div class="col-sm-3" style="margin-top: 10px;">
+<i class="fas fa-atom"
+style="font-size: 45px; color: #7c8385;"></i>
+</div>
+<div class="col-sm-9">
+<p
+style="font-size: 40px; padding-left: 10px; color: #7c8385;">
+<span id="entropy_val-rca">0</span>
+</p>
+<p
+style="font-size: 40px; padding-left: 10px; color: #4a5457;">
+<span id="entropy_val-rca"> 0 </span>
+</div>
+</div>
+</div>
+</div>
+end of the  card row for info
+
+
+</div> -->
+<div class="col-sm-4 hovernow"
+style="border: 0.5px solid #dbd1d1; width: 30%; margin-left: 15px; height: 100px;">
+<div class="row">
+<div class="col-sm-12"
+style="height: 35px; background: #485e8e;">
+<p
+style="text-align: center; padding-top: 2%; font-size: 16px; font-weight: 900; color: white;">
+Value</p>
+</div>
+</div>
+
+<div class="row">
+<div class="col-sm-12" id="severity_div-rca-2" style="height: 58px;">
+<p
+style="font-size: 40px; padding-left: 10px; color: #4a5457;">
+<span id="entropy_val-rca"> 0 </span>
+</p>
+</div>
+</div>
+</div>
+
+</div>
+<p id="recom-alert-data-chart" style="magin-left: 4px; margin-right: 4px; margin-top: 10px;padding-left:10px;"></p>
+<!-- end of the first three card s -->
+
+
+<!-- CREATING A DIV FOR TABLE -->
+<!-- <div id="onClickNodeModal-body"
+style="magin-left: 4px; margin-right: 4px; margin-top: 10px;">
+</div> -->
+
+<!-- add div for the circle here if needed-->
+
+</div>
+<!-- end of the modal body -->
+
+
+<div id="popupFooter-rca" class="modal-footer">
+<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>
+
+</div>
+</div>
+</div>
+
+
+<!-- end of the modal -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+          <!-- section that include the table in this class-...  connectedSortable ... adds the property tat can move div elements  -->
+          
+          <!-- right col -->
+        </div>
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <!-- <footer class="main-footer">
+    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
+    All rights reserved.
+    <div class="float-right d-none d-sm-inline-block">
+      <b>Version</b> 3.1.0-rc
+    </div>
+  </footer> -->
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+
+
+<script>
+  
+function myFunction() {
+  
+  data = {"seCode":{"alert_occurance":[[111,72,101,43],[30,47,17,10],[42,14,7],[24,44,55],[45,42],[34,43,21,18],[33,44]],"server_name":["login","flight","payment","bus","hotel","registration","itinerary"],"colour":["red","green","green","green","green","red","green"],"entropy":[0.66,0.29,0.25,0.25,0.25,0.25,0.07],"nodes":["login","flight","payment","bus","hotel","booking","itinerary"],"corelated":[4,4,3,3,2,4,2],"overall_severity":[1.561,1.375,1.192,1.362,1.346,1.735,1.345],"priority":[["CRITICAL","CRITICAL","CRITICAL","WARNING"],["CRITICAL","WARNING","CRITICAL","CRITICAL"],["WARNING","NA","NA"],["CRITICAL","WARNING","CRITICAL"],["WARNING","CRITICAL"],["WARNING","CRITICAL","CRITICAL","CRITICAL"],["CRITICAL","WARNING"]],"raw_count":[327,160,153,142,117,116,107],"alert_type":[["network","network","cpu","cpu"],["other","other","network","network"],["other","network","network"],["network","other","cpu"],["cpu","memory"],["other","cpu","network","network"],["network","cpu"]],"top_alerts":[["login has a high p90 latency on aveksrv02","login has an abnormal change in throughput on aveksrv02","cpu usages","cpu usages"],["other","other","hotel has an abnormal change in throughput on aveksrv03","flight has an abnormal change in throughput on aveksrv01"],["other","payment has an abnormal change in throughput on aveksrv01","payment has a high p90 latency on aveksrv01"],["bus has an abnormal change in throughput on aveksrv03","other","cpu usages"],["cpu usages","memory usages"],["other","cpu usages","registration has an abnormal change in throughput on aveksrv02","registration has a high p90 latency on aveksrv02"],["itinerary has an abnormal change in throughput on aveksrv04","cpu usages"]]},"nodeData":[{"color":"red","shape":"circle","widthConstraint":200,"id":"booking","label":"booking"},{"color":"red","shape":"circle","widthConstraint":200,"id":"login","label":"login"},{"color":"green","shape":"circle","widthConstraint":200,"id":"itinerary","label":"itinerary"},{"color":"green","shape":"circle","widthConstraint":200,"id":"hotel","label":"hotel"},{"color":"green","shape":"circle","widthConstraint":200,"id":"flight","label":"flight"},{"color":"green","shape":"circle","widthConstraint":200,"id":"bus","label":"bus"},{"color":"green","shape":"circle","widthConstraint":200,"id":"payment","label":"payment"}],"edgeData":[{"arrows":"to","from":"login","id":0,"to":"bus"},{"arrows":"to","from":"login","id":1,"to":"flight"},{"arrows":"to","from":"login","id":2,"to":"hotel"},{"arrows":"to","from":"login","id":3,"to":"itinerary"},{"arrows":"to","from":"bus","id":4,"to":"booking"},{"arrows":"to","from":"flight","id":5,"to":"booking"},{"arrows":"to","from":"hotel","id":6,"to":"booking"},{"arrows":"to","from":"itinerary","id":7,"to":"booking"},{"arrows":"to","from":"booking","id":8,"to":"payment"}]}
+
+
+  // for network-topology
+  addChart(data)
+
+
+
+
+}
+
+</script>
+
+
+
+<!-- jQuery -->
+<!-- <script src="plugins/jquery/jquery.min.js"></script> -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="plugins/jquery-ui/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- ChartJS -->
+<script src="plugins/chart.js/Chart.min.js"></script>
+<!-- Sparkline -->
+<script src="plugins/sparklines/sparkline.js"></script>
+<!-- JQVMap -->
+<script src="plugins/jqvmap/jquery.vmap.min.js"></script>
+<script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+<!-- jQuery Knob Chart -->
+<script src="plugins/jquery-knob/jquery.knob.min.js"></script>
+<!-- daterangepicker -->
+<script src="plugins/moment/moment.min.js"></script>
+<script src="plugins/daterangepicker/daterangepicker.js"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<!-- Summernote -->
+<script src="plugins/summernote/summernote-bs4.min.js"></script>
+<!-- overlayScrollbars -->
+<script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="dist/js/demo.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="dist/js/pages/dashboard.js"></script>
+
+
+
+
+
+
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script src="http://d3js.org/d3.v5.min.js"></script>
+
+
+<!-- highchart graphs and vis graphs-->
+<!-- topology graph from vis.js -->
+<!-- <script src="pages/highchartsjs/topo_graph.js"></script> -->
+<script src="pages/highchartsjs/piechart-alert-clustering.js"></script>
+<script src="pages/highchartsjs/alert-by-timeline-chart.js"></script>
+<script src="pages/highchartsjs/hostgraph.js"></script>
+<script src="pages/highchartsjs/network-graph.js"></script>
+<!-- <script src="pages/highchartsjs/topo-graph2.js"></script> -->
+<script src="pages/highchartsjs/topo_graph1.js"></script>
+
+
+
+
+</body>
+</html>
